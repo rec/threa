@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "threa"
+version = "0.1.0"
+description = "More powerful threads"
+authors = ["Tom Ritchford <tom@swirly.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+flake8 = "*"
+pytest = "*"
+ruff = "*"
+mypy = "*"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.black]
+skip-string-normalization = true
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
