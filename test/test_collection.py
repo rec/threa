@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from threa.collection import ThreadQueue
+import threa
 
 
 @pytest.mark.parametrize('thread_count', [1, 3])
@@ -14,7 +14,7 @@ def test_thread_queue(thread_count):
         result.append(item)
         time.sleep(random.uniform(0.001, 0.010))
 
-    with ThreadQueue(callback, thread_count=thread_count) as tq:
+    with threa.ThreadQueue(callback, thread_count=thread_count) as tq:
         for i in range(8):
             tq.queue.put(i)
 
@@ -35,7 +35,7 @@ def test_thread_queue_exception(thread_count):
 
         time.sleep(random.uniform(0.001, 0.010))
 
-    with ThreadQueue(
+    with threa.ThreadQueue(
         callback=callback, exception=exceptions.append, thread_count=thread_count
     ) as tq:
         for i in range(8):

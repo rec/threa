@@ -1,12 +1,12 @@
 import time
 
-from threa import thread
+import threa
 
 
 def test_is_thread():
     result = []
 
-    class IsThread(thread.IsThread):
+    class IsThread(threa.IsThread):
         def callback(self):
             result.append(0)
             if len(result) >= 4:
@@ -43,7 +43,7 @@ def test_has_thread():
         if len(result) >= 4:
             ht.stop()
 
-    ht = thread.HasThread(callback)
+    ht = threa.HasThread(callback)
     with ht:
         pass
 
@@ -63,12 +63,12 @@ if __name__ == '__main__':
         print(label, time.time() - start)
         time.sleep(dt)
 
-    class Is(thread.IsThread):
+    class Is(threa.IsThread):
         looping = LOOPING
 
         def callback(self):
             cb('is', 1.5)
 
-    ht = thread.HasThread(cb, looping=LOOPING)
+    ht = threa.HasThread(cb, looping=LOOPING)
     ht.start()
     Is().start()
