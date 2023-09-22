@@ -23,22 +23,24 @@ def test_thread_queue(thread_count):
 
 
 @pytest.mark.parametrize('thread_count', [1, 3])
-def test_thread_queue_error(thread_count):
+def test_thread_queue_exception(thread_count):
     result = []
-    errors = []
+    exceptions = []
 
-    def cb(item):
+    def callback(item):
         result.append(item)
         if len(result) == 5:
-            result.append('ERROR')
-            raise ValueError('An', 'error')
+            result.append('EXCEPTION')
+            raise ValueError('An', 'exception')
 
         time.sleep(random.uniform(0.001, 0.010))
 
-    with ThreadQueue(callback=cb, error=errors.append, thread_count=thread_count) as tq:
+    with ThreadQueue(
+        callback=callback, exception=exceptions.append, thread_count=thread_count
+    ) as tq:
         for i in range(8):
             tq.queue.put(i)
 
     assert not tq.running
-    assert result == (list(range(5)) + ['ERROR'])
-    assert [e.args for e in errors] == [('An', 'error')]
+    assert result == (list(range(5)) + ['EXCEPTION'])
+    assert [e.args for e in exceptions] == [('An', 'exception')]

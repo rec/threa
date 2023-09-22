@@ -1,10 +1,11 @@
 import dataclasses as dc
+import logging
 import typing as t
 from functools import cached_property
 from queue import Empty, Queue
 
 from .runnable import Runnable
-from .thread import HasThread, none
+from .thread import ExceptionHandler, HasThread, IsLog
 
 _SENTINEL_MESSAGE = object()
 
@@ -51,11 +52,29 @@ class ThreadQueue(HasRunnables):
     queue for each consumer.
     """
 
+    #: `callback` is called on one of the worker threads for each entry
+    #: that gets added to the queue
     callback: t.Callable[[t.Any], None]
-    exception: t.Callable = none
+
+    #: Passed to threading.Thread
+    daemon: bool = False
+
+    #: If set, `exception` gets called on an Exception.
+    exception: t.Optional[ExceptionHandler] = None
+
+    #: Used for error and debug logging
+    log: IsLog = logging
+
+    #: Passed to queue.Queue
     maxsize: int = 0
+
+    #: The print name of the thread, used for debugging
     name: str = 'thread_queue'
+
+    #: Number of threads to service the queue
     thread_count: int = 1
+
+    #: Timeout in polling the queue
     timeout: t.Optional[float] = 0.1
 
     def __post_init__(self):
@@ -72,8 +91,6 @@ class ThreadQueue(HasRunnables):
             self.queue.put(_SENTINEL_MESSAGE)
 
     def _thread(self, i: int) -> HasThread:
-        thread = HasThread(name=f'{self.name}-{i}', exception=self.exception)
-
         def callback():
             self.running.wait()
             while self.running and thread.running:
@@ -89,5 +106,6 @@ class ThreadQueue(HasRunnables):
                     self.stop()
                     raise
 
-        thread.callback = callback
+        thread = HasThread(callback, name=f'{self.name}-{i}', exception=self.exception)
+
         return thread

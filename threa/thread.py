@@ -1,9 +1,9 @@
 import abc
 import dataclasses as dc
+import functools
 import logging
 import traceback
 import typing as t
-import functools
 from threading import Thread
 
 from .runnable import Callback, Runnable
@@ -15,6 +15,7 @@ ExceptionHandler = t.Callable[[Exception], None]
 
 class IsLog(t.Protocol):
     """A class that looks like a subset of Python's logging"""
+
     debug: t.Callable
     error: t.Callable
 
@@ -63,7 +64,7 @@ class ThreadBase(Runnable):
     #: If False, `callback` is called just once
     looping: bool = False
 
-    #: The print name of the string, used for debugging
+    #: The print name of the thread, used for debugging
     name: str = ''
 
     def __str__(self):

@@ -38,15 +38,12 @@ def test_is_thread():
 def test_has_thread():
     result = []
 
-    ht = thread.HasThread()
-
     def callback():
         result.append(0)
         if len(result) >= 4:
             ht.stop()
 
-    ht.callback = callback
-
+    ht = thread.HasThread(callback)
     with ht:
         pass
 
@@ -58,7 +55,7 @@ if __name__ == '__main__':
     # A little sandbox for experimenting with threads.
     import logging
 
-    logging.setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
     start = time.time()
     LOOPING = False
 
