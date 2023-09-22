@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "threa"
-version = "0.2.0"
-description = "More powerful threads"
+version = "0.2.1"
+description = "🧵 More powerful threads 🧵"
 authors = ["Tom Ritchford <tom@swirly.com>"]
 license = "MIT"
 readme = "README.md"
