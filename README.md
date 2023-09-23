@@ -1,2 +1,1 @@
-# thre
-More powerful threads
+# 🧵 `threa`: Better threads 🧵
