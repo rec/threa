@@ -76,13 +76,18 @@ class ThreadBase(Runnable):
 
     @_add_log(after=True)
     def run(self):
-        self.pre_run()
-        self.running.set()
-
         def tb():
             exc = traceback.format_exc()
             self.log.error(f'{self}: Exception\n{exc}')
             self.stop()
+
+        try:
+            self.pre_run()
+        except Exception:
+            tb()
+            return
+
+        self.running.set()
 
         while self.running:
             try:
