@@ -1,4 +1,3 @@
-import abc
 import dataclasses as dc
 import functools
 import logging
@@ -117,7 +116,7 @@ class ThreadBase(Runnable):
         pass
 
 
-class IsThread(ThreadBase, Thread, abc.ABC):
+class IsThread(ThreadBase, Thread):
     """This ThreadBase inherits from threading.Thread.
 
     To use IsThread, derive from it and override either or both of
@@ -128,7 +127,6 @@ class IsThread(ThreadBase, Thread, abc.ABC):
         ThreadBase.__init__(self, *args, **kwargs)
         Thread.__init__(self, daemon=self.daemon)
 
-    @abc.abstractmethod
     def callback(self):
         """Called one or more times in a new thread"""
 
