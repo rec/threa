@@ -1,4 +1,5 @@
 import threading
+import types
 import typing as t
 
 Callback = t.Callable[[], None]
@@ -14,19 +15,19 @@ class Event(threading.Event):
 
     on_set: t.List[Callback]
 
-    def __init__(self, *on_set: Callback):
+    def __init__(self, *on_set: Callback) -> None:
         self.on_set = list(on_set)
         super().__init__()
 
-    def set(self):
+    def set(self) -> None:
         super().set()
         [c() for c in self.on_set]
 
-    def clear(self):
+    def clear(self) -> None:
         super().clear()
         [c() for c in self.on_set]
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return self.is_set()
 
 
@@ -68,18 +69,18 @@ class Runnable:
     #: An event that is only set once this object is fully stopped
     stopped: Event
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.running = Event()
         self.stopped = Event()
 
-    def start(self):
+    def start(self) -> None:
         """Start this object.
 
         Note that self.running might not be immediately true after this method completes
         """
         self.running.set()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop as soon as possible. might not do anything, should never raise.
 
         Note that self.stopped might not be immediately true after this method completes
@@ -87,21 +88,26 @@ class Runnable:
         self.running.clear()
         self.stopped.set()
 
-    def finish(self):
+    def finish(self) -> None:
         """Request an orderly shutdown where all existing work is completed.
 
         Note that self.stopped might not be immediately true after this method completes
         """
         self.stop()
 
-    def join(self, timeout: t.Optional[float] = None):
+    def join(self, timeout: t.Optional[float] = None) -> None:
         """Join this thread or process.  Might block indefinitely, might do nothing"""
 
-    def __enter__(self):
+    def __enter__(self) -> 'Runnable':
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: t.Optional[t.Type[BaseException]],
+        exc_val: t.Optional[BaseException],
+        exc_tb: t.Optional[types.TracebackType],
+    ) -> None:
         try:
             if exc_type is None:
                 self.finish()

@@ -17,7 +17,7 @@ ruff = "*"
 mypy = "*"
 
 [tool.mypy]
-ignore_missing_imports = true
+strict = true
 
 [tool.black]
 skip-string-normalization = true
