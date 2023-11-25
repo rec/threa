@@ -17,16 +17,11 @@ class AnyFunction(t.Protocol):
         pass
 
 
-class LogFunction(t.Protocol):
-    def __call__(self, *args: t.Any, **kwargs: t.Any) -> None:
-        pass
-
-
 class IsLog(t.Protocol):
     """A class that looks like a subset of Python's logging"""
 
-    debug: LogFunction
-    error: LogFunction
+    debug: AnyFunction
+    error: AnyFunction
 
 
 class HasLog(t.Protocol):
