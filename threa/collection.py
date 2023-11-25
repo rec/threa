@@ -81,6 +81,8 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
     def __post_init__(self) -> None:
         HasRunnables.__init__(self)
         self.runnables = tuple(self._thread(i) for i in range(self.thread_count))
+        self.put = self.queue.put
+        self.get = self.queue.get
 
     @cached_property
     def queue(self) -> 'Queue[T]':

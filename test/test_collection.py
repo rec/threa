@@ -16,7 +16,7 @@ def test_thread_queue(thread_count):
 
     with threa.ThreadQueue(callback, thread_count=thread_count) as tq:
         for i in range(8):
-            tq.queue.put(i)
+            tq.put(i)
 
     assert not tq.running
     assert sorted(result) == list(range(8))
@@ -39,7 +39,7 @@ def test_thread_queue_exception(thread_count):
         callback=callback, exception=exceptions.append, thread_count=thread_count
     ) as tq:
         for i in range(8):
-            tq.queue.put(i)
+            tq.put(i)
 
     assert not tq.running
     assert result == (list(range(5)) + ['EXCEPTION'])
