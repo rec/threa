@@ -57,17 +57,20 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=logging.DEBUG)
     start = time.time()
-    LOOPING = False
+    LOOPING = True
 
-    def cb(label='was', dt=2):
-        print(label, time.time() - start)
+    def cb(label='HasThread', dt=5):
+        elapsed = time.time() - start
+        print(label, elapsed)
         time.sleep(dt)
+        if elapsed > 5:
+            raise ValueError('Houston, do you read?')
 
     class Is(threa.IsThread):
         looping = LOOPING
 
         def callback(self):
-            cb('is', 1.5)
+            cb('IsThread ', 1.5)
 
     ht = threa.HasThread(cb, looping=LOOPING)
     ht.start()
