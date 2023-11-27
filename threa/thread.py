@@ -71,6 +71,9 @@ class ThreadBase(Runnable):
     #: Passed to threading.Thread
     daemon: bool = False
 
+    #: Do we join the thread in __exit__?
+    join_on_exit: bool = True
+
     #: Used for error and debug logging
     log: IsLog = logging
 
@@ -167,6 +170,9 @@ class HasThread(ThreadBase):
 
     #: Passed to threading.Thread
     daemon: bool = False
+
+    #: Do we join the thread in __exit__?
+    join_on_exit: bool = True
 
     #: Used for error and debug logging
     log: IsLog = logging

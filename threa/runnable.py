@@ -69,6 +69,9 @@ class Runnable:
     #: An event that is only set once this object is fully stopped
     stopped: Event
 
+    #: Do we join the thread in __exit__?
+    join_on_exit: bool = True
+
     def __init__(self) -> None:
         self.running = Event()
         self.stopped = Event()
@@ -111,6 +114,7 @@ class Runnable:
         try:
             if exc_type is None:
                 self.finish()
-                self.join()
+                if self.join_on_exit:
+                    self.join()
         finally:
             self.stop()
