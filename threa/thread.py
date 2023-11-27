@@ -131,7 +131,7 @@ class ThreadBase(Runnable):
 
     @_add_log
     def finish(self) -> None:
-        pass
+        super().finish()
 
 
 class IsThread(ThreadBase, Thread):
