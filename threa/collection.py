@@ -63,6 +63,9 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
     #: If set, `exception` gets called on an Exception.
     exception: t.Optional[ExceptionHandler] = None
 
+    #: Do we join the thread in __exit__?
+    join_on_exit: bool = True
+
     #: Used for error and debug logging
     log: IsLog = logging
 
@@ -110,6 +113,11 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
                     self.stop()
                     raise
 
-        thread = HasThread(callback, name=f'{self.name}-{i}', exception=self.exception)
+        thread = HasThread(
+            callback=callback,
+            exception=self.exception,
+            join_on_exit=self.join_on_exit,
+            name=f'{self.name}-{i}',
+        )
 
         return thread
