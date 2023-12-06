@@ -4,6 +4,7 @@ import logging
 import traceback
 import typing as t
 from threading import Thread
+from time import sleep
 
 from .runnable import Callback, Runnable
 
@@ -84,6 +85,12 @@ class ThreadBase(Runnable):
     #: The print name of the thread, used for debugging
     name: str = ''
 
+    #: How long to delay after running?
+    post_delay: float = 0
+
+    #: How long to delay before running?
+    pre_delay: float = 0
+
     def __str__(self) -> str:
         return f'({self.__class__.__name__}){self.name}'
 
@@ -107,6 +114,8 @@ class ThreadBase(Runnable):
         self.running.set()
 
         while self.running:
+            if self.pre_delay > 0:
+                sleep(self.pre_delay)
             try:
                 self.callback()
             except Exception as e:
@@ -122,6 +131,8 @@ class ThreadBase(Runnable):
             else:
                 if not self.looping:
                     self.stop()
+                if self.post_delay > 0:
+                    sleep(self.post_delay)
 
         self.stopped.set()
 
@@ -183,6 +194,12 @@ class HasThread(ThreadBase):
 
     #: The print name of the string, used for debugging
     name: str = ''
+
+    #: How long to delay after running?
+    post_delay: float = 0
+
+    #: How long to delay before running?
+    pre_delay: float = 0
 
     def __post_init__(self) -> None:
         ThreadBase.__init__(self)

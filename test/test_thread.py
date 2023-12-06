@@ -1,6 +1,7 @@
 import time
 
 import threa
+from threa import thread
 
 
 def test_is_thread():
@@ -35,20 +36,23 @@ def test_is_thread():
     assert result == [0, 0, 0, 0]
 
 
-def test_has_thread():
+def test_has_thread(monkeypatch):
     result = []
+    sleeps = []
+    monkeypatch.setattr(thread, 'sleep', sleeps.append)
 
     def callback():
         result.append(0)
         if len(result) >= 4:
             ht.stop()
 
-    ht = threa.HasThread(callback)
+    ht = threa.HasThread(callback, pre_delay=2, post_delay=-1)
     with ht:
         pass
 
     assert ht.stopped
     assert result == [0]
+    assert sleeps == [2]
 
 
 if __name__ == '__main__':
