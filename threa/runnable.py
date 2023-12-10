@@ -112,7 +112,7 @@ class Runnable:
         exc_tb: t.Optional[types.TracebackType],
     ) -> None:
         try:
-            if exc_type is None:
+            if exc_type in (None, KeyboardInterrupt):
                 self.finish()
                 if self.join_on_exit:
                     self.join()
