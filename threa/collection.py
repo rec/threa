@@ -47,6 +47,7 @@ class HasRunnables(Runnable):
 class Runnables(HasRunnables):
     def __init__(self, *runnables: Runnable):
         self.runnables = runnables
+        super().__init__()
 
 
 @dc.dataclass
