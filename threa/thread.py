@@ -119,7 +119,7 @@ class ThreadBase(Runnable):
             try:
                 self.callback()
             except Exception as e:
-                if self.exception:
+                if self.exception is not None:
                     try:
                         self.exception(e)
                     except Exception:

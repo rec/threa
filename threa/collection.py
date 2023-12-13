@@ -44,6 +44,11 @@ class HasRunnables(Runnable):
             super().stop()
 
 
+class Runnables(HasRunnables):
+    def __init__(self, *runnables: Runnable):
+        self.runnables = runnables
+
+
 @dc.dataclass
 class ThreadQueue(HasRunnables, t.Generic[T]):
     """A simple multi-producer, multi-consumer queue with one thread per consumer.
