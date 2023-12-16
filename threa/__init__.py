@@ -1,6 +1,7 @@
 from .collection import HasRunnables, Runnables, ThreadQueue
 from .runnable import Event, Runnable
 from .thread import HasThread, IsThread
+from .wrapper import Wrapper
 
 __all__ = (
     'Event',
@@ -10,4 +11,5 @@ __all__ = (
     'Runnable',
     'Runnables',
     'ThreadQueue',
+    'Wrapper',
 )

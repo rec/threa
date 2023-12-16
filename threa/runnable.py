@@ -111,10 +111,9 @@ class Runnable:
         exc_val: t.Optional[BaseException],
         exc_tb: t.Optional[types.TracebackType],
     ) -> None:
-        try:
-            if exc_type in (None, KeyboardInterrupt):
-                self.finish()
-                if self.join_on_exit:
-                    self.join()
-        finally:
+        if exc_type in (None, KeyboardInterrupt):
+            self.finish()
+            if self.join_on_exit:
+                self.join()
+        else:
             self.stop()
