@@ -104,26 +104,26 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
             self.queue.put(t.cast(T, _SENTINEL_MESSAGE))
 
     def _thread(self, i: int) -> HasThread:
-        def callback() -> None:
-            self.running.wait()
-            while self.running and thread.running:
-                try:
-                    item = self.queue.get(timeout=self.timeout)
-                except Empty:
-                    continue
-                if item is _SENTINEL_MESSAGE:
-                    return
-                try:
-                    self.callback(item)
-                except Exception:
-                    self.stop()
-                    raise
-
         thread = HasThread(
-            callback=callback,
+            callback=self._callback,
             exception=self.exception,
             join_on_exit=self.join_on_exit,
             name=f'{self.name}-{i}',
         )
 
         return thread
+
+    def _callback(self) -> None:
+        self.running.wait()
+        while self.running:
+            try:
+                item = self.queue.get(timeout=self.timeout)
+            except Empty:
+                continue
+            if item is _SENTINEL_MESSAGE:
+                return
+            try:
+                self.callback(item)
+            except Exception:
+                self.stop()
+                raise
