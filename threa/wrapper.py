@@ -23,4 +23,4 @@ class Wrapper(Runnable):
     def join(self, timeout: t.Optional[float] = None) -> None:
         super().join(timeout)
         if (join := getattr(self.wrapped, 'join', None)) is not None:
-            join(t)
+            join(timeout)
