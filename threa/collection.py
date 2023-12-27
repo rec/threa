@@ -88,8 +88,16 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
     timeout: t.Optional[float] = 0.1
 
     def __post_init__(self) -> None:
+        def thread(i: int) -> HasThread:
+            return HasThread(
+                callback=self._callback,
+                exception=self.exception,
+                join_on_exit=self.join_on_exit,
+                name=f'{self.name}-{i}',
+            )
+
         HasRunnables.__init__(self)
-        self.runnables = tuple(self._thread(i) for i in range(self.thread_count))
+        self.runnables = tuple(thread(i) for i in range(self.thread_count))
 
     def put(self, item: T) -> None:
         self.queue.put(item)
@@ -104,18 +112,11 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
         for _ in self.runnables:
             self.put(t.cast(T, _SENTINEL_MESSAGE))
 
-    def _thread(self, i: int) -> HasThread:
-        thread = HasThread(
-            callback=self._callback,
-            exception=self.exception,
-            join_on_exit=self.join_on_exit,
-            name=f'{self.name}-{i}',
-        )
-
-        return thread
+        super().finish()
 
     def _callback(self) -> None:
         self.running.wait()
+
         while self.running:
             try:
                 item = self.queue.get(timeout=self.timeout)
