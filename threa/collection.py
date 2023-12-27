@@ -90,8 +90,9 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
     def __post_init__(self) -> None:
         HasRunnables.__init__(self)
         self.runnables = tuple(self._thread(i) for i in range(self.thread_count))
-        self.put = self.queue.put
-        self.get = self.queue.get
+
+    def put(self, item: T) -> None:
+        self.queue.put(item)
 
     @cached_property
     def queue(self) -> 'Queue[T]':
@@ -101,7 +102,7 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
     def finish(self) -> None:
         """Put an empty message into the queue for each listener"""
         for _ in self.runnables:
-            self.queue.put(t.cast(T, _SENTINEL_MESSAGE))
+            self.put(t.cast(T, _SENTINEL_MESSAGE))
 
     def _thread(self, i: int) -> HasThread:
         thread = HasThread(
@@ -120,7 +121,7 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
                 item = self.queue.get(timeout=self.timeout)
             except Empty:
                 continue
-            if item is _SENTINEL_MESSAGE:
+            if item == _SENTINEL_MESSAGE:
                 return
             try:
                 self.callback(item)
