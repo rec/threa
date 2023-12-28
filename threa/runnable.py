@@ -57,6 +57,7 @@ class Runnable:
         try:
             do_stuff()
             runnable.finish()
+            runnable.join()
         finally:
             runnable.stop()
 
@@ -96,8 +97,6 @@ class Runnable:
         Note that self.stopped might not be immediately true after this method completes
         """
         self.stop()
-        if self.join_on_exit:
-            self.join()
 
     def join(self, timeout: t.Optional[float] = None) -> None:
         """Join this thread or process.  Might block indefinitely, might do nothing"""
@@ -112,4 +111,9 @@ class Runnable:
         exc_val: t.Optional[BaseException],
         exc_tb: t.Optional[types.TracebackType],
     ) -> None:
-        self.finish()
+        if exc_type in (None, KeyboardInterrupt):
+            self.finish()
+            if self.join_on_exit:
+                self.join()
+        else:
+            self.stop()
