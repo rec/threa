@@ -112,7 +112,8 @@ class ThreadQueue(HasRunnables, t.Generic[T]):
         for _ in self.runnables:
             self.put(t.cast(T, _SENTINEL_MESSAGE))
 
-        super().finish()
+        self.join()
+        self.stop()
 
     def _callback(self) -> None:
         self.running.wait()
