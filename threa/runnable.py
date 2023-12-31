@@ -31,6 +31,27 @@ class Event(threading.Event):
         return self.is_set()
 
 
+class _Event:
+    def __set_name__(self, owner: t.Any, name: str) -> None:
+        self.name = '_' + name
+
+    def __get__(self, obj: t.Any, objtype: t.Any = None) -> Event:
+        event: t.Optional[Event] = getattr(obj, self.name, None)
+        if event is not None:
+            return event
+
+        setattr(obj, self.name, event := Event())
+        return event
+
+    def __set__(self, obj: t.Any, value: t.Union[bool, Event]) -> None:
+        if isinstance(value, Event):
+            setattr(obj, self.name, value)
+        elif value:
+            self.__get__(obj).set()
+        else:
+            self.__get__(obj).clear()
+
+
 class Runnable:
     """A base class for things that start, run, finish, stop and join
 
@@ -63,33 +84,26 @@ class Runnable:
 
     """
 
-    #: An Event that is only set once this object is actually running
-    running: Event
-
-    #: An event that is only set once this object is fully stopped
-    stopped: Event
+    running = _Event()
+    stopped = _Event()
 
     #: Do we join the thread in __exit__?
     join_on_exit: bool = True
-
-    def __init__(self) -> None:
-        self.running = Event()
-        self.stopped = Event()
 
     def start(self) -> None:
         """Start this object.
 
         Note that self.running might not be immediately true after this method completes
         """
-        self.running.set()
+        self.running = True
 
     def stop(self) -> None:
         """Stop as soon as possible. might not do anything, should never raise.
 
         Note that self.stopped might not be immediately true after this method completes
         """
-        self.running.clear()
-        self.stopped.set()
+        self.running = False
+        self.stopped = True
 
     def finish(self) -> None:
         """Request an orderly shutdown where all existing work is completed.
