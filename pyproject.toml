@@ -5,6 +5,8 @@ description = "🧵 Better threads 🧵"
 authors = ["Tom Ritchford <tom@swirly.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/rec/threa"
+homepage = "https://github.com/rec/threa"
 
 [tool.poetry.dependencies]
 python = ">=3.8"
