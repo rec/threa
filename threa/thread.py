@@ -92,7 +92,7 @@ class ThreadBase(Runnable):
     pre_delay: float = 0
 
     def __str__(self) -> str:
-        return f'({self.__class__.__name__}){self.name}'
+        return f'{self.__class__.__name__}-{self.name}'
 
     @_add_log
     def pre_run(self) -> None:

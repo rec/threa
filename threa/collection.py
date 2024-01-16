@@ -24,15 +24,15 @@ class HasRunnables(Runnable):
 
     def stop(self) -> None:
         self.running.clear()
-        for r in self.runnables:
+        for r in reversed(self.runnables):
             r.stop()
 
     def finish(self) -> None:
-        for r in self.runnables:
+        for r in reversed(self.runnables):
             r.finish()
 
     def join(self, timeout: t.Optional[float] = None) -> None:
-        for r in self.runnables:
+        for r in reversed(self.runnables):
             r.join(timeout)
 
     def _on_start(self) -> None:
