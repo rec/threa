@@ -22,13 +22,6 @@ mypy = "*"
 [tool.mypy]
 strict = true
 
-[tool.black]
-skip-string-normalization = true
-target-version = ["py311"]
-
-[tool.isort]
-profile = "black"
-
 [tool.ruff]
 line-length = 88
 
