@@ -1,23 +1,44 @@
-[tool.poetry]
+[project]
 name = "threa"
 version = "1.9.1"
 description = "🧵 Better threads 🧵"
-authors = ["Tom Ritchford <tom@swirly.com>"]
-license = "MIT"
+authors = [{ name = "Tom Ritchford", email = "tom@swirly.com" }]
+requires-python = ">=3.8"
 readme = "README.md"
-repository = "https://github.com/rec/threa"
-homepage = "https://github.com/rec/threa"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = ["coverage>=7.3.2,<8"]
 
-[tool.poetry.dependencies]
-python = ">=3.8"
-coverage = "^7.3.2"
+[project.urls]
+Homepage = "https://github.com/rec/threa"
+Repository = "https://github.com/rec/threa"
 
-[tool.poetry.group.dev.dependencies]
-black = "*"
-flake8 = "*"
-pytest = "*"
-ruff = "*"
-mypy = "*"
+[dependency-groups]
+dev = [
+    "black",
+    "flake8",
+    "pytest",
+    "ruff",
+    "mypy",
+]
+
+[tool.uv]
+
+[tool.uv.build-backend]
+module-root = ""
+
+[build-system]
+requires = ["uv_build>=0.9.0,<0.10.0"]
+build-backend = "uv_build"
 
 [tool.mypy]
 strict = true
@@ -27,6 +48,3 @@ line-length = 88
 
 [tool.ruff.format]
 quote-style = "single"
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
