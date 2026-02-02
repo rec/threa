@@ -24,11 +24,11 @@ Repository = "https://github.com/rec/threa"
 
 [dependency-groups]
 dev = [
-    "black",
-    "flake8",
     "pytest",
     "ruff",
-    "mypy",
+    "coverage>=7.4.1",
+    "pyupgrade>=3.21.2",
+    "ty>=0.0.14",
 ]
 
 [tool.uv]
@@ -36,6 +36,14 @@ dev = [
 [tool.uv.build-backend]
 module-root = ""
 
+
+[tool.coverage]
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+skip_covered = true
+exclude_lines = ["pragma: no cover", "if False:", "if __name__ == .__main__.:", "raise NotImplementedError"]
 [build-system]
 requires = ["uv_build>=0.9.0,<0.10.0"]
 build-backend = "uv_build"
